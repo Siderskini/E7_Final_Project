@@ -4,7 +4,7 @@ function [instructions] = calband_template(initial_formation, target_formation, 
 %   calband_transition for your submissions, as specified in the project guidelines pdf.
 % Also note that this function satisfies all the basic requirements for the
 %   problem as well as demonstrating appropriate commenting techniques.
-% On that note, as you progress in the assignment, remember to check back 
+% On that note, as you progress in the assignment, remember to check back
 %   that you are still meeting these basic requirements, as it is easy to lose
 %   the fundementals as you get more entrenched in a complex problem.
 
@@ -28,16 +28,20 @@ for I = 1:length(instructions)
     instructions(I).j_target = j(I);
 end
 
-%{
-s = size(initial_formation);
+[i,j] = find(initial_formation);
+
+for I = 1:length(instructions)
+    initials(I).i_initial = i(I);
+    initials(I).j_initial = j(I);
+end
+
 for M = 1:s(1)
     for N = 1:s(2)
         if(initial_formation(M,N) == 0)
         elseif~(initial_formation(M,N) == target_formation(M,N))
             
-        end        
+        end
     end
 end
-%}
-
+    
 end
