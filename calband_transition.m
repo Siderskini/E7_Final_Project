@@ -23,21 +23,33 @@ instructions = repmat(instructions,1,n_bandmembers);
 % Now it is up to you to figure out how to use the information provided
 % to fill out the instructions struct array with appropriate values!
 
+% Configures the target position data in instructions struct;
 for I = 1:length(instructions)
     instructions(I).i_target = i(I);
     instructions(I).j_target = j(I);
 end
 
+% Sets [i,j] to locations of members in the intial formation;
 [i,j] = find(initial_formation);
 
+% initials now contains the intial locations of the band members;
 for I = 1:length(instructions)
     initials(I).i_initial = i(I);
     initials(I).j_initial = j(I);
 end
 
+%Takes size of initial_formation; I'm assuming size of target formation is
+%the same;
+s = size(initial_formation);
+
+% I figure this for loop may come in handy sometime; Cycles through initial
+% formation and target formation;
 for M = 1:s(1)
     for N = 1:s(2)
+        % if (M,N) is unoccupied in initial formation...;
         if(initial_formation(M,N) == 0)
+        % if (M,N) is occupied in both initial position and target
+        % position...;
         elseif~(initial_formation(M,N) == target_formation(M,N))
             
         end
