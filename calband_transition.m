@@ -1,4 +1,4 @@
-function [instructions] = calband_template(initial_formation, target_formation, max_beats)
+function [instructions] = calband_transition(initial_formation, target_formation, max_beats)
 % This function is a template to help you get started with your project
 % Note that you should change the function and file name to
 %   calband_transition for your submissions, as specified in the project guidelines pdf.
@@ -27,6 +27,8 @@ instructions = repmat(instructions,1,n_bandmembers);
 for I = 1:length(instructions)
     instructions(I).i_target = i(I);
     instructions(I).j_target = j(I);
+    instructions(I).wait = 2;
+    instructions(I).direction = 'NE';   
 end
 
 % Sets [i,j] to locations of members in the intial formation;
