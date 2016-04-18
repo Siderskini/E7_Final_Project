@@ -27,22 +27,29 @@ instructions = repmat(instructions,1,n_bandmembers);
 for I = 1:length(instructions)
     instructions(I).i_target = i(I);
     instructions(I).j_target = j(I);
-    instructions(I).wait = 2;
-    instructions(I).direction = 'NE';   
 end
-
-% Sets [i,j] to locations of members in the intial formation;
-[i,j] = find(initial_formation);
 
 % initials now contains the intial locations of the band members;
 for I = 1:length(instructions)
-    initials(I).i_initial = i(I);
-    initials(I).j_initial = j(I);
+    [i,j] = find(initial_formation == I);
+    initials(I).i_initial = i;
+    initials(I).j_initial = j;
+    initials(I).number = I;
 end
 
 %Takes size of initial_formation; I'm assuming size of target formation is
 %the same;
 s = size(initial_formation);
+
+% Creates initials_isort
+initials_fields = fieldnames(initials);
+initials_cell = struct2cell(initials);
+size = size(initials_cell);
+initials_cell = reshape(initials_cell, size(1), []);
+initials_cell = initials_cell';
+initials_cell = sortrows(initials_cell, 1);
+initials_cell = reshape(initials_cell', size);
+initials_isort = cell2struct(initials_cell, initials_fields, 1);
 
 % I figure this for loop may come in handy sometime; Cycles through initial
 % formation and target formation;
@@ -57,6 +64,5 @@ for M = 1:s(1)
         end
     end
 end
-
     
 end
