@@ -106,7 +106,6 @@ for I = 1:length(instructions)
     N = initials_ijsort(I).number;
     instructions(N).i_target = targets_ijsort(I).i;
     instructions(N).j_target = targets_ijsort(I).j;
-    
 end
 
 for I = 1:length(instructions)
@@ -122,17 +121,17 @@ for I = 1:length(instructions)
         if(instructions(I).j_target == initials(I).j_initial)
             instructions(I).direction = 'E';
         elseif(instructions(I).j_target > initials(I).j_initial)
-            instructions(I).direction = 'NE';
+            instructions(I).direction = 'EN';
         else
-            instructions(I).direction = 'SE';
+            instructions(I).direction = 'ES';
         end
     else
         if(instructions(I).j_target == initials(I).j_initial)
             instructions(I).direction = 'W';
         elseif(instructions(I).j_target > initials(I).j_initial)
-            instructions(I).direction = 'NW';
+            instructions(I).direction = 'WN';
         else
-            instructions(I).direction = 'SW';
+            instructions(I).direction = 'WS';
         end
     end
 end
