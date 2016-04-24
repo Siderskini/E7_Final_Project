@@ -13,17 +13,17 @@ for I = 1:length(instructions)
         if(instructions(I).j_target == initials(I).j_initial)
             instructions(I).direction = 'E';
         elseif(instructions(I).j_target > initials(I).j_initial)
-            instructions(I).direction = 'EN';
+            instructions(I).direction = 'NE';
         else
-            instructions(I).direction = 'ES';
+            instructions(I).direction = 'SE';
         end
     else
         if(instructions(I).j_target == initials(I).j_initial)
             instructions(I).direction = 'W';
         elseif(instructions(I).j_target > initials(I).j_initial)
-            instructions(I).direction = 'WN';
+            instructions(I).direction = 'NW';
         else
-            instructions(I).direction = 'WS';
+            instructions(I).direction = 'SW';
         end
     end
 end

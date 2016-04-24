@@ -64,4 +64,11 @@ instructions = directions(initials, instructions);
 instructions_list(2).instr = instructions;
 instructions = LSDAssign(initial_formation, target_formation);
 instructions_list(3).instr = instructions;
+
+% Accounts for all possible directions of marchers
+instructions_list = direction_plus(instructions_list);
+
+% Picks the best set of instructions
 instructions = picker(instructions_list);
+
+
