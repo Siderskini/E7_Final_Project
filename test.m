@@ -44,6 +44,7 @@ for I = 1:length(instructions)
 end
 
 % initials now contains the intial locations of the band members;
+initials = struct('i_initial',[],'j_initial',[]);
 for I = 1:length(instructions)
     [i,j] = find(initial_formation == I);
     initials(I).i_initial = i;
@@ -79,24 +80,20 @@ instructions_list(3).instr = instructions;
 instructions = LSDAssign(initial_formation, target_formation);
 instructions = directions(initials, instructions);
 instructions_list(4).instr = instructions;
-toc
 
 % Fifth element of instructions_list is created with OptAssign algorithm
 instructions = OptAssign(initial_formation, target_formation);
 instructions = directions(initials, instructions);
 instructions_list(5).instr = instructions;
-toc
 
 % Takes out instructions that break max_beats
 instructions_list_2 = distance_filter(instructions_list,initials,max_beats);
 if(length(instructions_list_2) > 2)
     instructions_list_2 = distance_filter(instructions_list_2,initials,max_beats);
 end
-toc
 
 % Accounts for all possible directions of marchers
 instructions_list_3 = direction_plus(instructions_list_2);
-toc
 
 % Picks the best set of instructions
 instructions = picker(instructions_list_3, max_beats, initials);

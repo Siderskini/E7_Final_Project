@@ -8,7 +8,7 @@ test results every time you open matlab, as every time you open matlab,
 your workspace is cleared. If this file becomes obsolete, we'll just get
 rid of it. I just thought it held some time and effort benefits.
 %}
-
+tic
 % Finds the number of bandmembers by adding up all the 1s in the target
 n_bandmembers = sum(sum(target_formation));
 
@@ -40,6 +40,7 @@ for I = 1:length(instructions)
 end
 
 % initials now contains the intial locations of the band members;
+initials = struct('i_initial',[],'j_initial',[]);
 for I = 1:length(instructions)
     [i,j] = find(initial_formation == I);
     initials(I).i_initial = i;
@@ -54,13 +55,46 @@ s = size(initial_formation);
 % Creates instructions_list
 instructions_list = struct('instr',[]);
 
-instructions = IJAssign(initials, targets, instructions);
+old_instructions = instructions;
+
+% First element of instructions_list is created with Hungarian
+instructions = Hungarian(initial_formation, target_formation, max_beats);
 instructions = directions(initials, instructions);
 instructions_list(1).instr = instructions;
-instructions = IJAssign(initials, targets, instructions);
+
+% Second element of instructions_list is created with IJAssign algorithm
+instructions = IJAssign(initials, targets, old_instructions);
 instructions = directions(initials, instructions);
 instructions_list(2).instr = instructions;
-instructions = LSDAssign(initial_formation, target_formation);
+
+% Third element of instructions_list is created with JIAssign algorithm
+instructions = JIAssign(initials, targets, old_instructions);
+instructions = directions(initials, instructions);
 instructions_list(3).instr = instructions;
-instructions = picker(instructions_list);
+
+% Fourth element of instructions_list is created with LSDAssign algorithm
+instructions = LSDAssign(initial_formation, target_formation);
+instructions = directions(initials, instructions);
+instructions_list(4).instr = instructions;
+
+% Fifth element of instructions_list is created with OptAssign algorithm
+instructions = OptAssign(initial_formation, target_formation);
+instructions = directions(initials, instructions);
+instructions_list(5).instr = instructions;
+
+% Takes out instructions that break max_beats
+instructions_list_2 = distance_filter(instructions_list,initials,max_beats);
+if(length(instructions_list_2) > 2)
+    instructions_list_2 = distance_filter(instructions_list_2,initials,max_beats);
+end
+
+% Accounts for all possible directions of marchers
+instructions_list_3 = direction_plus(instructions_list_2);
+
+% Picks the best set of instructions
+instructions = picker(instructions_list_3, max_beats, initials);
+toc
+
+% Applies wait times to reduce collisions
+%instructions = wait_times(instructions, initials, max_beats);
 end
