@@ -8,7 +8,7 @@ your workspace is cleared. If this file becomes obsolete, we'll just get
 rid of it. I just thought it held some time and effort benefits.
 %}
 tic
-max_beats = 76;
+max_beats = 32;
 load('sample_transitions.mat');
 target_formation = fullscale_bridge_to_train_target;
 initial_formation = fullscale_bridge_to_train_initial;
@@ -60,33 +60,38 @@ instructions_list = struct('instr',[]);
 
 old_instructions = instructions;
 
-% First element of instructions_list is created with IJAssign algorithm
-instructions = IJAssign(initials, targets, instructions);
+% First element of instructions_list is created with Hungarian
+instructions = Hungarian(initial_formation, target_formation, max_beats);
 instructions = directions(initials, instructions);
 instructions_list(1).instr = instructions;
-toc
 
-% Second element of instructions_list is created with JIAssign algorithm
-instructions = JIAssign(initials, targets, instructions);
-instructions = directions(initials, old_instructions);
+% Second element of instructions_list is created with IJAssign algorithm
+instructions = IJAssign(initials, targets, old_instructions);
+instructions = directions(initials, instructions);
 instructions_list(2).instr = instructions;
-toc
 
-% Third element of instructions_list is created with LSDAssign algorithm
-instructions = LSDAssign(initial_formation, target_formation);
+% Third element of instructions_list is created with JIAssign algorithm
+instructions = JIAssign(initials, targets, old_instructions);
 instructions = directions(initials, instructions);
 instructions_list(3).instr = instructions;
-toc
 
-% Fourth element of instructions_list is created with OptAssign algorithm
-instructions = OptAssign(initial_formation, target_formation);
+% Fourth element of instructions_list is created with LSDAssign algorithm
+instructions = LSDAssign(initial_formation, target_formation);
 instructions = directions(initials, instructions);
 instructions_list(4).instr = instructions;
+toc
 
+% Fifth element of instructions_list is created with OptAssign algorithm
+instructions = OptAssign(initial_formation, target_formation);
+instructions = directions(initials, instructions);
+instructions_list(5).instr = instructions;
 toc
 
 % Takes out instructions that break max_beats
 instructions_list_2 = distance_filter(instructions_list,initials,max_beats);
+if(length(instructions_list_2) > 2)
+    instructions_list_2 = distance_filter(instructions_list_2,initials,max_beats);
+end
 toc
 
 % Accounts for all possible directions of marchers
@@ -96,3 +101,6 @@ toc
 % Picks the best set of instructions
 instructions = picker(instructions_list_3, max_beats, initials);
 toc
+
+% Applies wait times to reduce collisions
+%instructions = wait_times(instructions, initials, max_beats);
