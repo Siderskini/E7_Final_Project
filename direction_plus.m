@@ -1,5 +1,8 @@
 function [instructions_list] = direction_plus(instructions_list)
 %
+if(isempty(instructions_list))
+    fprintf('Our algorithms were not able to come up with instructions that fit with max_beats.');
+else
 len1 = length(instructions_list);
 len2 = length(instructions_list(1).instr);
 for N = 1:len1
@@ -30,5 +33,6 @@ for N = 1:len1
             otherwise
         end
     end
+end
 end
 end

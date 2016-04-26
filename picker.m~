@@ -1,0 +1,98 @@
+function [final_instructions] = picker(instructions_list, max_beats, initials)
+%
+if(isempty(instructions_list))
+    fprintf('\nBecause of this, the program will terminate.');
+    final_instructions = 'Sorry.';
+else
+    positions = struct('x',[],'y',[]);
+    temp = instructions_list(1).instr;
+    count = 0;
+    X = length(instructions_list(1).instr);
+    Y = length(initials);
+    for A = 1:Y
+        positions(Y).x = initials(Y).i_initial;
+        positions(Y).y = initials(Y).j_initial;
+    end
+    for I = 1:length(instructions_list)
+        for J = 1:X
+            test = positions;
+            for B = 1:max_beats
+                switch instructions_list(I).instr(J).direction
+                    case '.'
+                    case 'N'
+                        if j_target > test.y
+                            test.y = test.y + 1;
+                        end
+                    case 'S'
+                        if j_target < test.y
+                            test.y = test.y - 1;
+                        end
+                    case 'E'
+                        if i_target > test.x
+                            test.x = test.x + 1;
+                        end
+                    case 'W'
+                        if i_target < test.x
+                            test.x = test.x - 1;
+                        end
+                    case 'NE'
+                        if j_target > test.y
+                            test.y = test.y + 1;
+                        elseif i_target > test.x
+                            test.x = test.x + 1;
+                        end
+                    case 'EN'
+                        if i_target > test.x
+                            test.x = test.x + 1;
+                        elseif j_target > test.y
+                            test.y = test.y + 1;
+                        end
+                    case 'NW'
+                        if j_target > test.y
+                            test.y = test.y + 1;
+                        elseif i_target < test.x
+                            test.x = test.x - 1;
+                        end
+                    case 'WN'
+                        if i_target < test.x
+                            test.x = test.x - 1;
+                        elseif j_target > test.y
+                            test.y = test.y + 1;
+                        end
+                    case 'SE'
+                        if j_target < test.y
+                            test.y = test.y - 1;
+                        elseif i_target > test.x
+                            test.x = test.x + 1;
+                        end
+                    case 'ES'
+                        if i_target > test.x
+                            test.x = test.x + 1;
+                        elseif j_target < test.y
+                            test.y = test.y - 1;
+                        end
+                    case 'SW'
+                        if j_target < test.y
+                            test.y = test.y - 1;
+                        elseif i_target < test.x
+                            test.x = test.x - 1;
+                        end
+                    case 'WS'
+                        if i_target < test.x
+                            test.x = test.x - 1;
+                        elseif j_target < test.y
+                            test.y = test.y - 1;
+                        end
+                    otherwise
+                        fprintf(['WARNING: Something went wrong ', ...
+                            'because this part of the code should ', ...
+                            'be unreachable. Please report this bug.\n'])
+                end
+            end
+        end
+    end
+    %count = collisions(initial_formation, target_formation, temp, max_beats,count);
+    %count
+    final_instructions = temp;
+end
+end

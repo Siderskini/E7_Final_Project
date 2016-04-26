@@ -1,4 +1,4 @@
-function [instructions] = LSDAssign(initial_formation, target_formation)
+function [instructions] = OptAssign(initial_formation, target_formation)
 %Assigns target locations to marchers
 
 target_formation2 = target_formation;
@@ -7,16 +7,29 @@ n_bandmembers = sum(sum(target_formation));
 instructions = struct('i_target',[],'j_target',[],'wait',[],'direction',[]);
 instructions = repmat(instructions,1,n_bandmembers);
 
+for i = 1:size(target_formation2, 1)
+    for j = 1:size(target_formation2, 2)
+        if target_formation2(i, j) ~= 0 && initial_formation2(i, j) ~= 0
+            marcherNumber = initial_formation2(i, j);
+            instructions(marcherNumber).i_target = i;
+            instructions(marcherNumber).j_target = j;
+            instructions(marcherNumber).wait = 0;
+            instructions(marcherNumber).direction = '';
+            target_formation2(i, j) = 0;
+            initial_formation2(i, j) = 0;
+        end
+    end
+end
+
 while nnz(initial_formation2) ~= 0
     n_bandmembers = sum(sum(target_formation2));
     characteristics2 = struct('i_target',[],'j_target',[],'i_initial', [], 'j_initial', [], 'marcherNumber', [], 'distance', [], 'direction', []);
-    characteristics2 = repmat(characteristics2,1,n_bandmembers);
 
     k = 1;
     for i = 1:size(target_formation2, 1)
         for j = 1:size(target_formation2, 2)
-            if target_formation2(i, j) ~= 0
-                [marcher_i, marcher_j, distance] = findTarget(i, j, initial_formation2);
+            if target_formation2(i, j) ~= 0 && initial_formation2(i, j) == 0
+                [marcher_i, marcher_j, distance] = findTarget(i, j, initial_formation2, target_formation2);
                 marchNumber = initial_formation2(marcher_i, marcher_j);
                 characteristics2(k).marcherNumber = marchNumber; 
                 characteristics2(k).distance = distance;
@@ -29,6 +42,8 @@ while nnz(initial_formation2) ~= 0
             end
         end
     end
+    
+    characteristics2;
 
     Afields = fieldnames(characteristics2);
     Acell = struct2cell(characteristics2);
@@ -57,17 +72,17 @@ while nnz(initial_formation2) ~= 0
 end
 end
 
-function [marcher_i, marcher_j, shortestDistance] = findTarget(target_i, target_j, initial_formation)
+function [marcher_i, marcher_j, shortestDistance] = findTarget(target_i, target_j, initial_formation, target_formation)
 %Takes in an final position, returns best possible target marcher position.
 
-shortestDistance = 50;
+shortestDistance = 10000000;
 marcher_i = 0;
 marcher_j = 0;
 for i = 1:size(initial_formation, 1)
     for j = 1:size(initial_formation, 2)
-        if initial_formation(i, j) ~= 0
+        if initial_formation(i, j) ~= 0 && target_formation(i, j) == 0
             Distance = sqrt((target_i - i)^2 + (target_j - j)^2);
-            if Distance <= shortestDistance
+            if Distance < shortestDistance
                 shortestDistance = Distance;
                 marcher_i = i;
                 marcher_j = j;

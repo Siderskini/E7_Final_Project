@@ -1,4 +1,4 @@
-function [instructions] = LSDAssign(initial_formation, target_formation)
+function [instructions] = SLDAssign(initial_formation, target_formation)
 %Assigns target locations to marchers
 
 target_formation2 = target_formation;

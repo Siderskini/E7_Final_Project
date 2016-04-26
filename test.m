@@ -7,9 +7,11 @@ test results every time you open matlab, as every time you open matlab,
 your workspace is cleared. If this file becomes obsolete, we'll just get
 rid of it. I just thought it held some time and effort benefits.
 %}
+tic
+max_beats = 76;
 load('sample_transitions.mat');
-target_formation = medium_e7_to_happy_target;
-initial_formation = medium_e7_to_happy_initial;
+target_formation = fullscale_bridge_to_train_target;
+initial_formation = fullscale_bridge_to_train_initial;
 
 % Finds the number of bandmembers by adding up all the 1s in the target
 n_bandmembers = sum(sum(target_formation));
@@ -56,19 +58,41 @@ s = size(initial_formation);
 % Creates instructions_list
 instructions_list = struct('instr',[]);
 
+old_instructions = instructions;
+
+% First element of instructions_list is created with IJAssign algorithm
 instructions = IJAssign(initials, targets, instructions);
 instructions = directions(initials, instructions);
 instructions_list(1).instr = instructions;
-instructions = IJAssign(initials, targets, instructions);
-instructions = directions(initials, instructions);
+toc
+
+% Second element of instructions_list is created with JIAssign algorithm
+instructions = JIAssign(initials, targets, instructions);
+instructions = directions(initials, old_instructions);
 instructions_list(2).instr = instructions;
+toc
+
+% Third element of instructions_list is created with LSDAssign algorithm
 instructions = LSDAssign(initial_formation, target_formation);
+instructions = directions(initials, instructions);
 instructions_list(3).instr = instructions;
+toc
+
+% Fourth element of instructions_list is created with OptAssign algorithm
+instructions = OptAssign(initial_formation, target_formation);
+instructions = directions(initials, instructions);
+instructions_list(4).instr = instructions;
+
+toc
+
+% Takes out instructions that break max_beats
+instructions_list_2 = distance_filter(instructions_list,initials,max_beats);
+toc
 
 % Accounts for all possible directions of marchers
-instructions_list = direction_plus(instructions_list);
+instructions_list_3 = direction_plus(instructions_list_2);
+toc
 
 % Picks the best set of instructions
-instructions = picker(instructions_list);
-
-
+instructions = picker(instructions_list_3, max_beats, initials);
+toc
