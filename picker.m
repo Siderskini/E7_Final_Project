@@ -106,7 +106,6 @@ else
             temp = instructions_list(I).instr;
             best_count = count;
         end
-        best_count
     end
     best_count
     final_instructions = temp;

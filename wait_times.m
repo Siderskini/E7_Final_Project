@@ -1,7 +1,27 @@
 function [instructions] = wait_times(instructions, initials, max_beats)
 %
+
+% Deletes duplicate collisions
+col_struct = collisions(instructions, initials, max_beats);
+temp = struct('frame',[],'marcher_1',[],'marcher_2',[],'location',[]);
+for I = 1:col_struct(end).frame
+    temp2 = struct('frame',[],'marcher_1',[],'marcher_2',[],'location',[]);
+    for J = 1:length(col_struct)
+        if(col_struct(J).frame == I)
+            temp2(end+1) = col_struct(J);
+        end
+    end
+    temp2(1) = [];
+    temp = [temp,temp2(1:(length(temp2)/2))];
+end
+temp(1) = [];
+col_struct = temp;
+for I = 1:length(col_struct)
+    instructions(col_struct(I).marcher_1).wait = instructions(col_struct(I).marcher_1).wait + 1;
+end
 for I = 1:length(instructions)
-    distance = abs(instructions(I).i_target - initials(I).i_initial) + abs(instructions(I).j_target - initials(I).j_initial);
-    instructions(I).wait = max_beats - abs(distance*2);
+    if(mod(instructions(I).wait,2)==1)
+    instructions(I).wait = instructions(I).wait + 1;
+    end
 end
 end

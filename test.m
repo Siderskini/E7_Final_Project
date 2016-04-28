@@ -88,8 +88,10 @@ instructions_list(5).instr = instructions;
 
 % Takes out instructions that break max_beats
 instructions_list_2 = distance_filter(instructions_list,initials,max_beats);
-if(length(instructions_list_2) > 2)
-    instructions_list_2 = distance_filter(instructions_list_2,initials,max_beats);
+newmax = max_beats;
+while(length(instructions_list_2) > 2)
+    newmax = newmax-2;
+    instructions_list_2 = distance_filter(instructions_list_2,initials,newmax);
 end
 
 % Accounts for all possible directions of marchers
@@ -97,7 +99,7 @@ instructions_list_3 = direction_plus(instructions_list_2);
 
 % Picks the best set of instructions
 instructions = picker(instructions_list_3, max_beats, initials);
-toc
 
 % Applies wait times to reduce collisions
 %instructions = wait_times(instructions, initials, max_beats);
+toc

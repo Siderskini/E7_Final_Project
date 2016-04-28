@@ -7,7 +7,7 @@ for N = 1:X
     while(I <= X)
         flag = true;
         for J = 1:length(instructions_list(I).instr)
-            distance = (instructions_list(I).instr(J).i_target-initials(J).i_initial)+(instructions_list(I).instr(J).j_target-initials(J).j_initial);
+            distance = abs(instructions_list(I).instr(J).i_target-initials(J).i_initial)+abs(instructions_list(I).instr(J).j_target-initials(J).j_initial);
             if(abs(distance) > steps)
                 flag = false;
             end
