@@ -1,5 +1,8 @@
 function [instructions_list] = distance_filter(instructions_list, initials, max_beats)
-%
+% Checks a set of instructiosn in instructions_list to see if all marchers
+% can complete in max_beats; If this isn't the case, it gets rid of those
+% instructions;
+
 steps = max_beats/2;
 X = length(instructions_list);
 I = 1;

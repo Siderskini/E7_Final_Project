@@ -1,14 +1,6 @@
 function [instructions] = calband_transition(initial_formation, target_formation, max_beats)
-%{
-Okay so the point of this file is so we can test out our code with
-arbitrary inputs without havign to call the entire function over and over
-again. Just add your new target formation and initial formation in lines 11
-and 12 and type 'test' into the editor. Also, it saves time in making your
-test results every time you open matlab, as every time you open matlab,
-your workspace is cleared. If this file becomes obsolete, we'll just get
-rid of it. I just thought it held some time and effort benefits.
-%}
-tic
+
+% Finds the number of bandmembers by adding up all the 1s in the target
 % Finds the number of bandmembers by adding up all the 1s in the target
 n_bandmembers = sum(sum(target_formation));
 
@@ -82,19 +74,33 @@ instructions = OptAssign(initial_formation, target_formation);
 instructions = directions(initials, instructions);
 instructions_list(5).instr = instructions;
 
-% Takes out instructions that break max_beats
+% Takes out instructions that break max_beats;
 instructions_list_2 = distance_filter(instructions_list,initials,max_beats);
-if(length(instructions_list_2) > 2)
-    instructions_list_2 = distance_filter(instructions_list_2,initials,max_beats);
+newmax = max_beats;
+instructions_list_small = instructions_list_2;
+
+% If instructions_list_2 has more than 2 elements, WE ELIMINATE THEM!!
+while(length(instructions_list_small) > 2)
+    instructions_list_2 = instructions_list_small;
+    newmax = newmax-2;
+    instructions_list_small = distance_filter(instructions_list_2,initials,newmax);
+end
+if(length(instructions_list_small) == 1)
+    instructions_list_2 = instructions_list_small;
 end
 
 % Accounts for all possible directions of marchers
 instructions_list_3 = direction_plus(instructions_list_2);
 
+% If we don't have instructions, we stop;
+if(isempty(instructions_list_3))
+    return;
+end
+
 % Picks the best set of instructions
 instructions = picker(instructions_list_3, max_beats, initials);
-toc
 
 % Applies wait times to reduce collisions
+% This was never finished :(
 %instructions = wait_times(instructions, initials, max_beats);
 end

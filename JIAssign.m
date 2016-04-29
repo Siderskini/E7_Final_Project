@@ -1,5 +1,7 @@
 function [ instructions ] = JIAssign(initials, targets, instructions)
-%
+% IJ Assign but backwards;
+
+% Sorts initials;
 initials_fields = fieldnames(initials);
 initials_cell = struct2cell(initials);
 size_initial = size(initials_cell);
@@ -24,6 +26,7 @@ end
 initials_cell2 = reshape(initials_cell', size_initial);
 initials_ijsort = cell2struct(initials_cell2, initials_fields, 1);
 
+% Sorts targets;
 targets_fields = fieldnames(targets);
 targets_cell = struct2cell(targets);
 size_target = size(targets_cell);

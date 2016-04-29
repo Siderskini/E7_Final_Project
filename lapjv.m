@@ -1,4 +1,6 @@
 function [rowsol,cost,v,u,costMat] = lapjv(costMat,resolution)
+
+% TAKEN FROM INTERNET AND CITED IN WRITEUP!!!!
 % LAPJV  Jonker-Volgenant Algorithm for Linear Assignment Problem.
 %
 % [ROWSOL,COST,v,u,rMat] = LAPJV(COSTMAT, resolution) returns the optimal column indices,

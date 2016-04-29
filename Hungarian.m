@@ -1,5 +1,5 @@
 function [instructions] = Hungarian(initial_formation, target_formation, beats)
-%Assigns target locations to marchers]
+% Assigns target locations to marchers using the Hungarian algorithm;
 
 index = 1;
 target_formation2 = target_formation;

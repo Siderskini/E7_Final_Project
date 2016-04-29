@@ -1,5 +1,7 @@
 function [instructions] = directions(initials, instructions)
-%
+% Assigns directions to marchers based on the other stuff in instructions
+% and initials;
+
 for I = 1:length(instructions)
     if(instructions(I).i_target == initials(I).i_initial)
         if(instructions(I).j_target == initials(I).j_initial)

@@ -1,19 +1,30 @@
 function [final_instructions] = picker(instructions_list, max_beats, initials)
-%
+% Most expensive part of the run; Picks the set of instructiosn in
+% instructions_list with the least collisions;
+
 if(isempty(instructions_list))
     fprintf('\nBecause of this, the program will terminate.');
     final_instructions = 'Sorry.';
 else
+    % Positions is initialized;
     positions = struct('x',[],'y',[]);
     temp = instructions_list(1).instr;
+    
+    % Initial value of best count is a collision count we hope we never
+    % reach...;
     best_count = 10000000000;
     X = length(instructions_list(1).instr);
     Z = X;
     Y = length(initials);
+    
+    % Positions holds the initial values of marcher positions;
     for A = 1:Y
         positions(A).x = initials(A).i_initial;
         positions(A).y = initials(A).j_initial;
     end
+    
+    % Big nasty nested expensive for loop (the same one you see in
+    % collisions.m);
     for I = 1:length(instructions_list)
         count = 0;
         test = positions;
@@ -95,6 +106,11 @@ else
                 rem(C).strx = int2str(test(C).x);
                 rem(C).stry = int2str(test(C).y);
             end
+            
+            % This part was taken from an internet source as cited in the
+            % write up; Bassically, it eliminates duplicates in a struct; I
+            % use this to eliminate duplicates in positions to find out how
+            % many spot collisions we have;
             xi = {rem.strx};
             yi = {rem.stry};
             c = cellfun(@(f,g) [f g],xi', yi','un',0);
@@ -107,6 +123,5 @@ else
             best_count = count;
         end
     end
-    best_count
     final_instructions = temp;
 end

@@ -1,5 +1,6 @@
 function [instructions] = LSDAssign(initial_formation, target_formation)
-%Assigns target locations to marchers
+% Assigns marchers to target locations to marchers based on longest 
+% shortest distance to target locations;
 
 target_formation2 = target_formation;
 initial_formation2 = initial_formation;
